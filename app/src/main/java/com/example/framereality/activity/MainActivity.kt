@@ -1,10 +1,8 @@
-package com.example.framereality
+package com.example.framereality.activity
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.framereality.R
 import com.example.framereality.databinding.ActivityMainBinding
 import com.example.framereality.fragments.ChatsListFragment
 import com.example.framereality.fragments.FavouriteListFragment
