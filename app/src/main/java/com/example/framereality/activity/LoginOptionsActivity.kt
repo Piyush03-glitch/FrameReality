@@ -61,6 +61,14 @@ class LoginOptionsActivity : AppCompatActivity() {
         binding.loginGoogleBtn.setOnClickListener {
             beginLoginBtn()
         }
+
+        binding.loginEmailBtn.setOnClickListener{
+            startActivity(Intent(this,LoginEmailActivity::class.java))
+        }
+
+        binding.loginPhoneBtn.setOnClickListener{
+            startActivity(Intent(this,LoginPhoneActivity::class.java))
+        }
     }
 
     private fun beginLoginBtn(){
