@@ -14,14 +14,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.framereality.R
-import com.example.framereality.databinding.ActivityLoginEmailBinding
+import com.example.framereality.databinding.ActivityLoginViewBinding
 import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.*
 
 class LoginEmailActivity : AppCompatActivity() {
 
     // View Binding
-    private lateinit var binding: ActivityLoginEmailBinding
+    private lateinit var binding: ActivityLoginViewBinding
 
     // Firebase Authentication
     private lateinit var firebaseAuth: FirebaseAuth
@@ -38,7 +38,7 @@ class LoginEmailActivity : AppCompatActivity() {
         enableEdgeToEdge()
 
         // Initialize View Binding
-        binding = ActivityLoginEmailBinding.inflate(layoutInflater)
+        binding = ActivityLoginViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Adjust system bars for immersive UI
@@ -55,20 +55,10 @@ class LoginEmailActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         // Back Button Click
-        binding.ToolBarBackButton.setOnClickListener { finish() }
+        binding.toolBarBackButton.setOnClickListener { finish() }
 
         // Login Button Click
         binding.loginBtn.setOnClickListener { validateData() }
-
-        // Register Button Click
-        binding.registerTv.setOnClickListener{
-
-        }
-
-        // Forget Password Button Click
-        binding.passRecoverTv.setOnClickListener{
-            startActivity(Intent(this, ForgetPassActivity::class.java))
-        }
     }
 
     // Validates Email and Password Input
