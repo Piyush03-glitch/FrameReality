@@ -55,7 +55,7 @@ class LoginEmailActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         // Back Button Click
-        binding.ToolBarBackButton.setOnClickListener { finish() }
+        binding.toolBarBackButton.setOnClickListener { finish() }
 
         // Login Button Click
         binding.loginBtn.setOnClickListener { validateData() }
