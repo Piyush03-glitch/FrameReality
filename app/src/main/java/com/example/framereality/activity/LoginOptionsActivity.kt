@@ -10,41 +10,39 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.framereality.MyUtils
 import com.example.framereality.R
 import com.example.framereality.databinding.ActivityLoginOptionsBinding
-import com.google.android.gms.auth.api.signin.*
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.database.FirebaseDatabase
 
 class LoginOptionsActivity : AppCompatActivity() {
 
-    // View Binding
-    private lateinit var binding: ActivityLoginOptionsBinding
+    // View binding for accessing UI components
+    private lateinit var binding : ActivityLoginOptionsBinding
 
-    // Debugging Tag
     private val TAG = "LOGIN_OPTIONS_TAG"
 
-    // Progress Dialog for Loading State
+    // Progress dialog for showing loading indication
     private lateinit var progressDialog: ProgressDialog
 
-    // Firebase Authentication
+    // Firebase authentication instance
     private lateinit var firebaseAuth: FirebaseAuth
 
-    // Google Sign-In Client
+    // Google Sign-In client instance
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize View Binding
         binding = ActivityLoginOptionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize Progress Dialog
-        progressDialog = ProgressDialog(this).apply {
-            setTitle("Please wait")
-            setCanceledOnTouchOutside(false)
-        }
+        // Initialize progress dialog
+        progressDialog = ProgressDialog(this)
+        progressDialog.setTitle("Please wait")
+        progressDialog.setCanceledOnTouchOutside(false)
 
         // Initialize Firebase Authentication
         firebaseAuth = FirebaseAuth.getInstance()
@@ -54,154 +52,112 @@ class LoginOptionsActivity : AppCompatActivity() {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        mGoogleSignInClient = GoogleSignIn.getClient(this,gso)
 
-        // Set Click Listeners
-        binding.skipBtn.setOnClickListener { finish() }
-
-        binding.loginGoogleBtn.setOnClickListener { beginGoogleLogin() }
-
-        binding.loginEmailBtn.setOnClickListener {
-            startActivity(Intent(this, LoginEmailActivity::class.java))
+        // Click listeners for different login options
+        binding.skipBtn.setOnClickListener {
+            finish() // Close activity
         }
 
-        binding.loginPhoneBtn.setOnClickListener {
-            startActivity(Intent(this, LoginPhoneActivity::class.java))
+        binding.loginGoogleBtn.setOnClickListener {
+            beginLoginBtn() // Start Google Sign-In
+        }
+
+        binding.loginEmailBtn.setOnClickListener{
+            startActivity(Intent(this,LoginEmailActivity::class.java)) // Navigate to email login
+        }
+
+        binding.loginPhoneBtn.setOnClickListener{
+            startActivity(Intent(this,LoginPhoneActivity::class.java)) // Navigate to phone login
         }
     }
 
-    /**
-     * Starts the Google Sign-In process.
-     */
-    private fun beginGoogleLogin() {
-        Log.d(TAG, "beginGoogleLogin: Initiating Google Sign-In")
+    // Start Google Sign-In process
+    private fun beginLoginBtn(){
+        Log.d(TAG, "beginLoginBtn: ")
         val googleSignInIntent = mGoogleSignInClient.signInIntent
         googleSignInARL.launch(googleSignInIntent)
     }
 
-    /**
-     * Handles the result of the Google Sign-In intent.
-     */
+    // Handle the result from Google Sign-In activity
     private val googleSignInARL = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
+        if(result.resultCode == Activity.RESULT_OK){
             val data = result.data
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d(TAG, "googleSignInARL: Google Account ID: ${account.id}")
-
-                // Authenticate with Firebase using Google account
+                Log.d(TAG, "googleSignInARL: AccountID: ${account.id}")
                 firebaseAuthWithGoogleAccount(account.idToken)
-            } catch (e: ApiException) {
-                Log.e(TAG, "googleSignInARL: Google Sign-In Failed", e)
-                MyUtils.toast(this, "Google Sign-In failed. Please try again.")
+            } catch (e : Exception){
+                Log.e(TAG, "googleSignInARL: ", e)
             }
-        } else {
-            Log.d(TAG, "googleSignInARL: User cancelled sign-in")
-            MyUtils.toast(this, "Sign-In cancelled. Try again.")
+        }
+        else{
+            Log.d(TAG, "googleSignInARL: Cancelled...!")
+            MyUtils.toast(this,"Cancelled...!")
         }
     }
 
-    /**
-     * Authenticates with Firebase using Google credentials.
-     */
-    private fun firebaseAuthWithGoogleAccount(idToken: String?) {
-        if (idToken == null) {
-            Log.e(TAG, "firebaseAuthWithGoogleAccount: ID Token is null")
-            MyUtils.toast(this, "Google Sign-In failed. Try again later.")
-            return
-        }
-
-        Log.d(TAG, "firebaseAuthWithGoogleAccount: Authenticating with Firebase")
-
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-
+    // Authenticate user with Firebase using Google credentials
+    private fun firebaseAuthWithGoogleAccount(idToken: String?){
+        Log.d(TAG, "firebaseAuthWithGoogleAccount: idToken : $idToken")
+        val credential = GoogleAuthProvider.getCredential(idToken,null)
         firebaseAuth.signInWithCredential(credential)
             .addOnSuccessListener { authResult ->
-                if (authResult.additionalUserInfo?.isNewUser == true) {
-                    Log.d(TAG, "firebaseAuthWithGoogleAccount: New User Detected - Creating Account")
-                    updateUserInfoDb()
-                } else {
-                    Log.d(TAG, "firebaseAuthWithGoogleAccount: Existing User Logged In")
-                    navigateToMain()
+                if(authResult.additionalUserInfo!!.isNewUser){
+                    Log.d(TAG, "firebaseAuthWithGoogleAccount: Account Created...!")
+                    updateUserInfoDb() // Save user info for new users
+                }
+                else{
+                    // Existing user, navigate to MainActivity
+                    startActivity(Intent(this,MainActivity::class.java))
+                    finishAffinity()
                 }
             }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "firebaseAuthWithGoogleAccount: Firebase Authentication Failed", e)
-                MyUtils.toast(this, "Sign-In failed: ${getFirebaseErrorMessage(e)}")
+            .addOnFailureListener { e->
+                Log.e(TAG, "firebaseAuthWithGoogleAccount: ",e)
+                MyUtils.toast(this,"Failed signin due to  ${e.message}")
             }
     }
 
-    /**
-     * Saves user data in Firebase Database.
-     */
-    private fun updateUserInfoDb() {
-        Log.d(TAG, "updateUserInfoDb: Saving user info to database")
-
-        progressDialog.setMessage("Saving user info...")
+    // Save new user information to Firebase Database
+    private fun updateUserInfoDb(){
+        Log.d(TAG, "updateUserInfoDb: ")
+        progressDialog.setMessage("Saving user info...!")
         progressDialog.show()
 
         val timestamp = MyUtils.timestamp()
-        val user = firebaseAuth.currentUser
+        val registeredUserUid = firebaseAuth.uid ?: ""
+        val registeredUserEmail = firebaseAuth.currentUser?.email ?: ""
+        val name = firebaseAuth.currentUser?.displayName ?: ""
 
-        if (user == null) {
-            Log.e(TAG, "updateUserInfoDb: Firebase User is null")
-            progressDialog.dismiss()
-            MyUtils.toast(this, "Failed to retrieve user data. Try again.")
-            return
-        }
-
-        val userInfo = mapOf(
-            "uid" to (user.uid ?: ""),
-            "email" to (user.email ?: "No Email"),
-            "name" to (user.displayName ?: "No Name"),
-            "timestamp" to timestamp,
-            "phoneCode" to "",
-            "phoneNumber" to "",
-            "profileImageUrl" to "",
-            "dob" to "",
-            "userType" to MyUtils.USER_TYPE_GOOGLE,
-            "token" to ""
-        )
+        val hashMap = HashMap<String,Any>()
+        hashMap["uid"] = registeredUserUid
+        hashMap["email"] = registeredUserEmail
+        hashMap["name"] = name
+        hashMap["timestamp"] = timestamp
+        hashMap["phoneCode"] = ""
+        hashMap["phoneNumber"] = ""
+        hashMap["profileImageUrl"] = ""
+        hashMap["dob"] = ""
+        hashMap["userType"] = MyUtils.USER_TYPE_GOOGLE
+        hashMap["token"] = ""
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
-        ref.child(user.uid)
-            .setValue(userInfo)
+        ref.child(registeredUserUid)
+            .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "updateUserInfoDb: User info saved successfully")
+                Log.d(TAG, "updateUserInfoDb: User Info saved...!")
                 progressDialog.dismiss()
-                navigateToMain()
+                startActivity(Intent(this,MainActivity::class.java))
+                finishAffinity()
             }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "updateUserInfoDb: Failed to save user info", e)
+            .addOnFailureListener { e->
+                Log.e(TAG, "updateUserInfoDb: ", e)
                 progressDialog.dismiss()
-                MyUtils.toast(this, "Failed to save user info. Try again later.")
+                MyUtils.toast(this,"Failed to save due to ${e.message}")
             }
-    }
-
-    /**
-     * Navigates the user to the MainActivity and clears the back stack.
-     */
-    private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finishAffinity()
-    }
-
-    /**
-     * Provides user-friendly Firebase error messages.
-     */
-    private fun getFirebaseErrorMessage(exception: Exception): String {
-        return when (exception) {
-            is FirebaseAuthInvalidUserException -> "No account found with this email."
-            is FirebaseAuthInvalidCredentialsException -> "Invalid credentials. Please check and try again."
-            is FirebaseAuthUserCollisionException -> "This email is already linked to another account."
-            is FirebaseAuthWeakPasswordException -> "Your password is too weak. Try a stronger one."
-            is FirebaseAuthRecentLoginRequiredException -> "Please log in again for security reasons."
-            is FirebaseNetworkException -> "No internet connection. Please check and try again."
-            else -> "Authentication failed. Please try again."
-        }
     }
 }

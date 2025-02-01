@@ -16,11 +16,8 @@
         android:theme="@style/Theme.FrameReality"
         tools:targetApi="31">
         <activity
-            android:name=".activity.ProfileEditActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ForgetPassActivity"
-            android:exported="false" />
+            android:name=".activity.RegisterEmailActivity"
+            android:exported="false"/>
         <activity
             android:name=".activity.LoginOptionsActivity"
             android:exported="true">
