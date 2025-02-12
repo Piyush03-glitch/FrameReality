@@ -63,6 +63,10 @@ class LoginEmailActivity : AppCompatActivity() {
         binding.noAccountTv.setOnClickListener {
             startActivity(Intent(this,RegisterEmailActivity::class.java))
         }
+
+        binding.forgetPasswordTv.setOnClickListener {
+            startActivity(Intent(this,ForgetPassActivity::class.java ))
+        }
     }
 
     // Validates Email and Password Input

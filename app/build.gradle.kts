@@ -57,8 +57,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.hbb20:ccp:2.5.0")
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    kapt("com.github.bumptech.glide:compiler:4.16.0")
+    implementation(libs.ccp.v250)
+    implementation(libs.glide)
+    kapt(libs.compiler)
+
+    //Glide
+    implementation(libs.glide)
 
 }

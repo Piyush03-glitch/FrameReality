@@ -25,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ForgetPassActivity"
+            android:exported="false"/>
         <activity
             android:name=".activity.LoginPhoneActivity"
             android:exported="false"/>
@@ -34,6 +36,12 @@
         <activity
             android:name=".activity.MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.PostAddActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activity.ProfileEditActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

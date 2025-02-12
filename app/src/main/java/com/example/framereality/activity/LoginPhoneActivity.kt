@@ -43,6 +43,7 @@ class LoginPhoneActivity : AppCompatActivity() {
         // Handle Back Button
         binding.ToolBarBackButton.setOnClickListener { finish() }
         binding.resend.visibility = View.GONE
+        
         // Initialize Phone Login Callbacks
         setupPhoneLoginCallbacks()
 
@@ -56,7 +57,7 @@ class LoginPhoneActivity : AppCompatActivity() {
 
         // Handle OTP Verification Button Click
         binding.OTPbtn.setOnClickListener {
-            val otp = binding.PhoneEt.text.toString().trim()
+            val otp = binding.OTPet.text.toString().trim()  // ✅ Correct EditText
             if (otp.length == 6) verifyPhoneNumberWithCode(otp)
             else binding.OTPet.error = "Enter a valid 6-digit OTP"
         }
@@ -92,6 +93,10 @@ class LoginPhoneActivity : AppCompatActivity() {
 
     // Resends OTP
     private fun resendVerificationCode() {
+        if (forceResendingToken == null) {
+            Toast.makeText(this, "Resend is not available yet. Try again later.", Toast.LENGTH_SHORT).show()
+            return
+        }
         showProgressDialog()
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(binding.PhoneCodeEt.selectedCountryCodeWithPlus + binding.PhoneEt.text.toString().trim())
@@ -125,10 +130,15 @@ class LoginPhoneActivity : AppCompatActivity() {
 
     // Verifies the phone number using OTP
     private fun verifyPhoneNumberWithCode(otp: String) {
+        if (mVerificationId == null) {
+            Toast.makeText(this, "Verification ID is null. Please request OTP again.", Toast.LENGTH_SHORT).show()
+            return
+        }
         showProgressDialog()
         val credential = PhoneAuthProvider.getCredential(mVerificationId!!, otp)
         signInWithPhoneAuthCredential(credential)
     }
+
 
     // Signs in user with phone authentication
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
