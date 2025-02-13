@@ -54,6 +54,7 @@ dependencies {
     implementation(libs.firebase.storage)
     //Firebase
     implementation(libs.play.services.auth)
+    implementation(libs.androidx.cardview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -124,6 +124,7 @@ class LoginPhoneActivity : AppCompatActivity() {
             override fun onVerificationFailed(exception: FirebaseException) {
                 hideProgressDialog()
                 Toast.makeText(this@LoginPhoneActivity, "Verification failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                exception.message?.let { Log.e(TAG, it) }
             }
         }
     }

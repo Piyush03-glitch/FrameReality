@@ -13,6 +13,18 @@ object MyUtils {
     const val USER_TYPE_EMAIL = "Email"
     const val USER_TYPE_PHONE = "Phone"
 
+    const val PROPERTY_TYPE_ANY="Any"
+    const val PROPERTY_TYPE_RENT="Rent"
+    const val PROPERTY_TYPE_SELL="Sell"
+
+    val propertyTypes= arrayOf("Homes","Plots","Commercial")
+    val propertyTypesHomes= arrayOf("House","Flat","Upper Portion","Lower Portion","Farm House","Room","Penthouse")
+    val propertyTypesPlots= arrayOf("Residential Plot","Commercial Plot","Agricultural Plot","Industrial Plot","Plot File","Plot Form")
+    val propertyTypesCommercial= arrayOf("Office","Shop","Factory","Warehouse","Building","Other")
+
+    val propertyAreaSizeUnit= arrayOf("Square Feet","Square Meter","Acre","Square Yards","Marla")
+
+
     fun toast(context: Context,message: String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
