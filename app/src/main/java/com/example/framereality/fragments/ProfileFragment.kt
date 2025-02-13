@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.framereality.MyUtils
 import com.example.framereality.R
 import com.example.framereality.activity.MainActivity
+import com.example.framereality.activity.PostAddActivity
 import com.example.framereality.activity.ProfileEditActivity
 import com.example.framereality.databinding.FragmentProfileBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -80,6 +81,9 @@ class ProfileFragment : Fragment() {
         // On click, start the ProfileEditActivity.
         binding.editProfileCv.setOnClickListener {
             startActivity(Intent(mContext, ProfileEditActivity::class.java))
+        }
+        binding.postAdBtn.setOnClickListener{
+            startActivity(Intent(mContext, PostAddActivity::class.java))
         }
     }
 

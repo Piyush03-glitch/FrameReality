@@ -59,14 +59,6 @@ class LoginEmailActivity : AppCompatActivity() {
 
         // Login Button Click
         binding.loginBtn.setOnClickListener { validateData() }
-
-        binding.noAccountTv.setOnClickListener {
-            startActivity(Intent(this,RegisterEmailActivity::class.java))
-        }
-
-        binding.forgetPasswordTv.setOnClickListener {
-            startActivity(Intent(this,ForgetPassActivity::class.java ))
-        }
     }
 
     // Validates Email and Password Input
@@ -104,7 +96,7 @@ class LoginEmailActivity : AppCompatActivity() {
                 Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
 
                 // Navigate to MainActivity
-                startActivity(Intent(this, ProfileEditActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
             .addOnFailureListener { exception ->
