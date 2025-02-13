@@ -3,6 +3,7 @@ package com.example.framereality.activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.framereality.MyUtils
 import com.example.framereality.R
 import com.example.framereality.databinding.ActivityMainBinding
 import com.example.framereality.fragments.ChatsListFragment
@@ -32,21 +33,50 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener { menuItem ->
             val itemId = menuItem.itemId
 
-            when(itemId){
+            when(itemId) {
                 R.id.item_home -> {
                     showHomeFragment()
+                    return@setOnItemSelectedListener true
                 }
+
                 R.id.item_chats -> {
-                    showChatsListFragment()
+
+
+                    if (firebaseAuth.currentUser == null) {
+                        MyUtils.toast(this, "Login Required...")
+                        return@setOnItemSelectedListener false
+                    } else {
+                        showChatsListFragment()
+                        return@setOnItemSelectedListener true
+                    }
                 }
+
                 R.id.item_favourite -> {
-                    showFavouriteListFragment()
+
+                    if (firebaseAuth.currentUser == null) {
+                        MyUtils.toast(this, "Login Required...")
+                        return@setOnItemSelectedListener false
+                    } else {
+                        showFavouriteListFragment()
+                        return@setOnItemSelectedListener true
+                    }
                 }
+
                 R.id.item_profile -> {
-                    showProfileFragment()
+
+                    if (firebaseAuth.currentUser == null) {
+                        MyUtils.toast(this, "Login Required...")
+                        return@setOnItemSelectedListener false
+                    } else {
+                        showProfileFragment()
+                        return@setOnItemSelectedListener true
+                    }
+                }
+
+                else -> {
+                    return@setOnItemSelectedListener false
                 }
             }
-            true
         }
     }
 
