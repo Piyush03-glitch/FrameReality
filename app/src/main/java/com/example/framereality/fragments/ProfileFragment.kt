@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.framereality.MyUtils
 import com.example.framereality.R
+import com.example.framereality.activity.ChangePasswordActivity
 import com.example.framereality.activity.MainActivity
 import com.example.framereality.activity.PostAddActivity
 import com.example.framereality.activity.ProfileEditActivity
@@ -82,8 +83,19 @@ class ProfileFragment : Fragment() {
         binding.editProfileCv.setOnClickListener {
             startActivity(Intent(mContext, ProfileEditActivity::class.java))
         }
+<<<<<<< Updated upstream
         binding.postAdBtn.setOnClickListener{
             startActivity(Intent(mContext, PostAddActivity::class.java))
+=======
+<<<<<<< HEAD
+
+        binding.changePasswordCv.setOnClickListener {
+            startActivity(Intent(mContext,ChangePasswordActivity::class.java))
+=======
+        binding.postAdBtn.setOnClickListener{
+            startActivity(Intent(mContext, PostAddActivity::class.java))
+>>>>>>> fe267abc8fdaafe5e38cf64489569aa28f627133
+>>>>>>> Stashed changes
         }
     }
 
