@@ -7,4 +7,5 @@
     <string name="forget_password">Forget Password? <b>Recover</b></string>
     <string name="have_account_register">Doesn\'t have an account?<b>Register</b></string>
     <string name="have_account_login">Have Account? <b>Login</b></string>
+    <string name="change_password">To Change Password you must verify,it\'s really you by entering your current password.Your new password should be different from current password.</string>
 </resources>
