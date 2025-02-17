@@ -41,6 +41,16 @@ class PostAddActivity : AppCompatActivity() {
         setupTabs()
         propertyCategoryHome() // Set default category
 
+        binding.scrollView2.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            // Check if the ScrollView can no longer scroll vertically in the downward direction.
+            if (!v.canScrollVertically(1)) { // reached the bottom
+                binding.submitBtn.visibility = View.VISIBLE
+            } else {
+                binding.submitBtn.visibility = View.GONE
+            }
+        }
+
+
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = group.findViewById<RadioButton>(checkedId)
             purpose = radioButton.text.toString()
@@ -49,12 +59,8 @@ class PostAddActivity : AppCompatActivity() {
     }
 
     private fun setupTabs() {
-        val tabLayout = binding.tabTL
+        val tabLayout = binding.propertyCategoryTabLayout
 
-        // Add tabs dynamically
-        tabLayout.addTab(tabLayout.newTab().setText("Home").setIcon(R.drawable.home_black))
-        tabLayout.addTab(tabLayout.newTab().setText("Plot").setIcon(R.drawable.plot))
-        tabLayout.addTab(tabLayout.newTab().setText("Commercial").setIcon(R.drawable.commercial))
 
         // Handle tab selection
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -82,21 +88,36 @@ class PostAddActivity : AppCompatActivity() {
         })
     }
 
+    private fun propertyCategoryHome() {
+        // For the Home tab, show fields and use the Homes array.
+        showFields(true)
+        adapterPropertySubcategory = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            MyUtils.propertyTypesHomes
+        )
+        binding.propertySubcategoryACTV.setText("")
+    }
+
     private fun propertyCategoryPlot() {
+        // For the Plot tab, hide fields and use the Plots array.
         showFields(false)
-        adapterPropertySubcategory = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyTypesHomes)
+        adapterPropertySubcategory = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            MyUtils.propertyTypesPlots
+        )
         binding.propertySubcategoryACTV.setText("")
     }
 
     private fun propertyCategoryCommercial() {
+        // For the Commercial tab, hide fields and use the Commercial array.
         showFields(false)
-        adapterPropertySubcategory = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyTypesPlots)
-        binding.propertySubcategoryACTV.setText("")
-    }
-
-    private fun propertyCategoryHome() {
-        showFields(true)
-        adapterPropertySubcategory = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyTypesCommercial)
+        adapterPropertySubcategory = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            MyUtils.propertyTypesCommercial
+        )
         binding.propertySubcategoryACTV.setText("")
     }
 

@@ -21,7 +21,6 @@ object MyUtils {
     val propertyTypesHomes= arrayOf("House","Flat","Upper Portion","Lower Portion","Farm House","Room","Penthouse")
     val propertyTypesPlots= arrayOf("Residential Plot","Commercial Plot","Agricultural Plot","Industrial Plot","Plot File","Plot Form")
     val propertyTypesCommercial= arrayOf("Office","Shop","Factory","Warehouse","Building","Other")
-
     val propertyAreaSizeUnit= arrayOf("Square Feet","Square Meter","Acre","Square Yards","Marla")
 
 

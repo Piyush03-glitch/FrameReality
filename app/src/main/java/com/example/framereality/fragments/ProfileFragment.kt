@@ -69,6 +69,12 @@ class ProfileFragment : Fragment() {
         // Load current user's information from Firebase.
         loadMyInfo()
 
+        //handle postAdBtn click, start PostAddActivity
+        binding.postAdBtn.setOnClickListener {
+            val intent = Intent(mContext,PostAddActivity::class.java)
+            startActivity(intent)
+        }
+
         // Set up logout click listener:
         // On click, sign out, navigate to MainActivity, and clear the activity stack.
         binding.logoutCv.setOnClickListener {
