@@ -1,22 +1,34 @@
 package com.example.framereality.activity
 
+import android.Manifest
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.PopupMenu
 import android.widget.RadioButton
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.framereality.MyUtils
-import com.example.framereality.R
 import com.example.framereality.databinding.ActivityPostAddBinding
 import com.google.android.material.tabs.TabLayout
 
 class PostAddActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostAddBinding
     private val TAG = "PostAddActivity"
+
+    private var imageUri:Uri? = null
 
     private var purpose = MyUtils.PROPERTY_TYPE_SELL
     private var category = MyUtils.propertyTypes[0]
@@ -41,20 +53,30 @@ class PostAddActivity : AppCompatActivity() {
         setupTabs()
         propertyCategoryHome() // Set default category
 
+        binding.scrollView2.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+            // Check if the ScrollView can no longer scroll vertically in the downward direction.
+            if (!v.canScrollVertically(1)) { // reached the bottom
+                binding.submitBtn.visibility = View.VISIBLE
+            } else {
+                binding.submitBtn.visibility = View.GONE
+            }
+        }
+
+
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val radioButton = group.findViewById<RadioButton>(checkedId)
             purpose = radioButton.text.toString()
             Log.d(TAG, "Purpose: $purpose")
         }
+
+        binding.pickImagesTV.setOnClickListener {
+            showImagePickOptions()
+        }
     }
 
     private fun setupTabs() {
-        val tabLayout = binding.tabTL
+        val tabLayout = binding.propertyCategoryTabLayout
 
-        // Add tabs dynamically
-        tabLayout.addTab(tabLayout.newTab().setText("Home").setIcon(R.drawable.home_black))
-        tabLayout.addTab(tabLayout.newTab().setText("Plot").setIcon(R.drawable.plot))
-        tabLayout.addTab(tabLayout.newTab().setText("Commercial").setIcon(R.drawable.commercial))
 
         // Handle tab selection
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -82,21 +104,36 @@ class PostAddActivity : AppCompatActivity() {
         })
     }
 
+    private fun propertyCategoryHome() {
+        // For the Home tab, show fields and use the Homes array.
+        showFields(true)
+        adapterPropertySubcategory = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            MyUtils.propertyTypesHomes
+        )
+        binding.propertySubcategoryACTV.setText("")
+    }
+
     private fun propertyCategoryPlot() {
+        // For the Plot tab, hide fields and use the Plots array.
         showFields(false)
-        adapterPropertySubcategory = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyTypesHomes)
+        adapterPropertySubcategory = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            MyUtils.propertyTypesPlots
+        )
         binding.propertySubcategoryACTV.setText("")
     }
 
     private fun propertyCategoryCommercial() {
+        // For the Commercial tab, hide fields and use the Commercial array.
         showFields(false)
-        adapterPropertySubcategory = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyTypesPlots)
-        binding.propertySubcategoryACTV.setText("")
-    }
-
-    private fun propertyCategoryHome() {
-        showFields(true)
-        adapterPropertySubcategory = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyTypesCommercial)
+        adapterPropertySubcategory = ArrayAdapter(
+            this,
+            android.R.layout.simple_list_item_1,
+            MyUtils.propertyTypesCommercial
+        )
         binding.propertySubcategoryACTV.setText("")
     }
 
@@ -105,5 +142,128 @@ class PostAddActivity : AppCompatActivity() {
         binding.floorsTIL.visibility = visibility
         binding.bedRoomsTIL.visibility = visibility
         binding.bathRoomsTIL.visibility = visibility
+    }
+
+    private fun showImagePickOptions(){
+        Log.d(TAG, "showImagePickOptions: ")
+
+        val popupMenu = PopupMenu(this,binding.pickImagesTV)
+
+        popupMenu.menu.add(Menu.NONE,1,1,"Camera")
+        popupMenu.menu.add(Menu.NONE,2,2,"Gallery")
+
+        popupMenu.show()
+
+        popupMenu.setOnMenuItemClickListener { item ->
+
+            val itemId = item.itemId
+            when(itemId){
+                1 -> {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                        val permissions = arrayOf(Manifest.permission.CAMERA)
+                        requestCameraPermissions.launch(permissions)
+                    }
+                    else{
+                        val permissions = arrayOf(Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        requestCameraPermissions.launch(permissions)
+                    }
+                }
+                2 -> {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+                        pickImageGallery()
+                    }
+                    else{
+                        val permissions = Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        requestStoragePermission.launch(permissions)
+                    }
+                }
+            }
+
+            true
+        }
+    }
+
+    private val requestStoragePermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ){ isGranted ->
+        Log.d(TAG, "requestStoragePermission: isGranted: $isGranted")
+
+        if(isGranted){
+            pickImageGallery()
+        }
+        else{
+
+            MyUtils.toast(this,"Storage Permission denied!")
+        }
+    }
+
+    private val requestCameraPermissions = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        Log.d(TAG, "requestCameraPermissions: result: $result")
+
+        var areAllGranted = true
+        for(isGranted in result.values){
+            areAllGranted = areAllGranted && isGranted
+        }
+
+        if(areAllGranted){
+            pickImageCamera()
+        }
+        else{
+            MyUtils.toast(this,"Camera Permission denied!")
+        }
+    }
+
+    private fun pickImageGallery(){
+        Log.d(TAG, "pickImageGallery: ")
+
+        val intent = Intent(Intent.ACTION_PICK)
+
+        intent.setType("image/*")
+        galleryActivityResultLauncher.launch(intent)
+    }
+
+    private val galleryActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result->
+        Log.d(TAG, "galleryActivityResultLauncher: result: $result")
+
+        if(result.resultCode == Activity.RESULT_OK){
+            val data = result.data
+            imageUri = data?.data
+
+            Log.d(TAG, "galleryActivityResultLauncher: imageUri: $imageUri")
+        }
+        else{
+            MyUtils.toast(this,"Cancelled!")
+        }
+    }
+
+    private fun pickImageCamera(){
+        Log.d(TAG, "pickImageCamera: ")
+
+        val contentValues = ContentValues()
+        contentValues.put(MediaStore.Images.Media.TITLE,"TEMP_TITLE")
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION,"TEMP_DESCRIPTION")
+
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues)
+
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri)
+
+    }
+
+    private val cameraActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        Log.d(TAG, "cameraActivityResultLauncher: result: $result")
+
+        if(result.resultCode == Activity.RESULT_OK){
+            Log.d(TAG, "cameraActivityResultLauncher: imageUri: $imageUri")
+        }
+        else{
+            MyUtils.toast(this,"Cancelled!")
+        }
     }
 }

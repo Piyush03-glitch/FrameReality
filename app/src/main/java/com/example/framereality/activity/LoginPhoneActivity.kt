@@ -135,7 +135,7 @@ class LoginPhoneActivity : AppCompatActivity() {
             Toast.makeText(this, "Verification ID is null. Please request OTP again.", Toast.LENGTH_SHORT).show()
             return
         }
-        showProgressDialog()
+        hideProgressDialog()
         val credential = PhoneAuthProvider.getCredential(mVerificationId!!, otp)
         signInWithPhoneAuthCredential(credential)
     }

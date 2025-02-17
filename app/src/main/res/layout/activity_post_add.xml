@@ -59,7 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/postAddBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,12 +124,29 @@
                 app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabTL"
+                app:layout_constraintTop_toBottomOf="@id/radioGroup"
+                android:id="@+id/propertyCategoryTabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:layout_constraintTop_toBottomOf="@id/typeTv"
-                app:tabTextColor="?attr/colorOnBackground">
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/home_black"
+                    android:text="@string/category_homes"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/plot_gray"
+                    android:text="@string/category_plots"/>
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/commercial_gray"
+                    android:text="@string/category_commercial"/>
+
             </com.google.android.material.tabs.TabLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -139,12 +155,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                app:startIconDrawable="@drawable/category_gray"
                 android:hint="Property SubCategory"
                 app:boxStrokeColor="?attr/colorOnBackground"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tabTL">
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/propertyCategoryTabLayout">
 
                 <AutoCompleteTextView
                     android:id="@+id/propertySubcategoryACTV"
@@ -169,6 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                app:startIconDrawable="@drawable/bed_gray"
                 android:hint="Bed Rooms"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
@@ -190,6 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="Floors"
+                app:startIconDrawable="@drawable/business_gray"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -200,7 +223,7 @@
                     android:id="@+id/floorsEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -208,6 +231,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                app:startIconDrawable="@drawable/bathrooms_gray"
                 android:hint="Bath Rooms"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
@@ -228,6 +252,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Area Size"
+                app:startIconDrawable="@drawable/area_gray"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintStart_toStartOf="parent"
@@ -247,7 +272,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:hint="Sq,ft"
+                android:hint="Sq.ft"
                 app:boxStrokeColor="?attr/colorOnBackground"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -268,6 +293,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:hint="Location"
+                app:startIconDrawable="@drawable/location_gray"
                 app:boxStrokeColor="?attr/colorOnBackground"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -287,6 +313,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="Price"
+                app:startIconDrawable="@drawable/price_gray"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -317,6 +344,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="Title"
+                app:startIconDrawable="@drawable/title_gray"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -327,7 +355,7 @@
                     android:id="@+id/titleET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="textPersonName" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -336,6 +364,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="Description"
+                app:startIconDrawable="@drawable/assignment_gray"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -346,7 +375,7 @@
                     android:id="@+id/descriptionET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text" />
+                    android:inputType="textMultiLine|textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -355,6 +384,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:hint="Email"
+                app:startIconDrawable="@drawable/email_black"
                 app:boxStrokeColor="?attr/colorOnSurface"
                 app:hintTextColor="?attr/colorOnBackground"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -377,8 +407,10 @@
                 android:layout_marginBottom="8dp"
                 app:ccp_autoDetectCountry="true"
                 app:ccp_countryAutoDetectionPref="SIM_NETWORK"
+                app:ccp_rememberLastSelection="true"
                 app:ccp_defaultNameCode="IN"
-                app:ccp_showFlag="false"
+                app:ccp_showFlag="true"
+                app:ccp_showNameCode="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/emailTIL" />
 
@@ -400,22 +432,38 @@
                 app:layout_constraintStart_toEndOf="@+id/phoneCodeET"
                 app:layout_constraintTop_toTopOf="@id/phoneCodeET">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneET"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phoneNumberTil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textColorHint="?attr/colorOnBackground" />
+                    android:layout_margin="10dp"
+                    android:hint="Phone Number"
+                    app:startIconDrawable="@drawable/phone_black"
+                    app:boxStrokeColor="?attr/colorOnSurface"
+                    app:hintTextColor="?attr/colorOnBackground"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/descriptionTIL">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phoneNumberEt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone" />
+                </com.google.android.material.textfield.TextInputLayout>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/pickImageTV"
+                android:id="@+id/pickImagesTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:drawableStart="@drawable/baseline_add_24"
-                android:text="Pick Image"
+                style="@style/TextAppearance.Material3.TitleMedium"
+                android:drawableStart="@drawable/add_photo"
+                android:drawablePadding="5dp"
+                android:paddingVertical="5dp"
+                android:gravity="center_vertical"
+                android:text="Pick Images"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -423,10 +471,11 @@
                 app:layout_constraintTop_toBottomOf="@id/phoneCodeET" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_photos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pickImageTV"
                 app:spanCount="4"
@@ -436,12 +485,15 @@
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/postAddBtn"
+        android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post Add"
+        android:minHeight="@dimen/m_button_height"
         android:background="?attr/colorOnPrimary"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
