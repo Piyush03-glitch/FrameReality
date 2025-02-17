@@ -57,7 +57,7 @@
                 android:id="@+id/continueWithLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="or conitnue with"
+                android:text="or continue with"
                 android:textColor="@color/white"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="20dp"
