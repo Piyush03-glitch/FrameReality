@@ -67,7 +67,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -167,11 +167,6 @@
                 app:boxCornerRadiusTopStart="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/propertyCategoryTabLayout">
 
-                <AutoCompleteTextView
-                    android:id="@+id/propertySubcategoryACTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -467,6 +462,7 @@
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="20dp"
                 android:textStyle="bold"
+                android:layout_marginBottom="80dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/phoneCodeET" />
 
@@ -474,26 +470,38 @@
                 android:id="@+id/recycler_photos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                android:layout_margin="28dp"
+                app:layout_constraintTop_toBottomOf="@id/pickImagesTV"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pickImageTV"
+                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                 app:spanCount="4"
                 tools:listitem="@layout/row_image_picked" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+            <AutoCompleteTextView
+                android:id="@+id/propertySubcategoryACTV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"
+                tools:layout_editor_absoluteX="17dp"
+                tools:layout_editor_absoluteY="108dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/submitBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Post Add"
-        android:minHeight="@dimen/m_button_height"
-        android:background="?attr/colorOnPrimary"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/submitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_margin="16dp"
+                android:text="Post Ad"
+                app:layout_constraintTop_toBottomOf="@id/recycler_photos"
+                android:minHeight="@dimen/m_button_height"
+                android:background="?attr/colorOnPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

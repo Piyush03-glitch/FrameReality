@@ -20,6 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.framereality.AdapterImagePicked
+import com.example.framereality.ModelImagePicked
 import com.example.framereality.MyUtils
 import com.example.framereality.databinding.ActivityPostAddBinding
 import com.google.android.material.tabs.TabLayout
@@ -33,6 +35,10 @@ class PostAddActivity : AppCompatActivity() {
     private var purpose = MyUtils.PROPERTY_TYPE_SELL
     private var category = MyUtils.propertyTypes[0]
     private var adapterPropertySubcategory: ArrayAdapter<String>? = null
+
+    private lateinit var imagePickedArrayList: ArrayList<ModelImagePicked>
+
+    private lateinit var adapterImagePicked : AdapterImagePicked
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,17 +56,12 @@ class PostAddActivity : AppCompatActivity() {
         val areaSizeAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, MyUtils.propertyAreaSizeUnit)
         binding.sizeACTV.setAdapter(areaSizeAdapter)
 
+        imagePickedArrayList = ArrayList()
+        loadImages()
+
         setupTabs()
         propertyCategoryHome() // Set default category
 
-        binding.scrollView2.setOnScrollChangeListener { v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-            // Check if the ScrollView can no longer scroll vertically in the downward direction.
-            if (!v.canScrollVertically(1)) { // reached the bottom
-                binding.submitBtn.visibility = View.VISIBLE
-            } else {
-                binding.submitBtn.visibility = View.GONE
-            }
-        }
 
 
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -234,6 +235,14 @@ class PostAddActivity : AppCompatActivity() {
             imageUri = data?.data
 
             Log.d(TAG, "galleryActivityResultLauncher: imageUri: $imageUri")
+
+            val timestamp = "${MyUtils.timestamp()}"
+
+            val modelImagePicked = ModelImagePicked(timestamp,imageUri,null,false)
+
+            imagePickedArrayList.add(modelImagePicked)
+
+            loadImages()
         }
         else{
             MyUtils.toast(this,"Cancelled!")
@@ -252,6 +261,8 @@ class PostAddActivity : AppCompatActivity() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri)
 
+        cameraActivityResultLauncher.launch(intent)
+
     }
 
     private val cameraActivityResultLauncher = registerForActivityResult(
@@ -261,9 +272,24 @@ class PostAddActivity : AppCompatActivity() {
 
         if(result.resultCode == Activity.RESULT_OK){
             Log.d(TAG, "cameraActivityResultLauncher: imageUri: $imageUri")
+
+            val timestamp = "${MyUtils.timestamp()}"
+
+            val modelImagePicked = ModelImagePicked(timestamp,imageUri,null,false)
+
+            imagePickedArrayList.add(modelImagePicked)
+
+            loadImages()
         }
         else{
             MyUtils.toast(this,"Cancelled!")
         }
+    }
+
+    private fun loadImages() {
+        Log.d(TAG, "loadImages: ")
+        adapterImagePicked = AdapterImagePicked(this,imagePickedArrayList)
+
+        binding.recyclerPhotos.adapter = adapterImagePicked
     }
 }
